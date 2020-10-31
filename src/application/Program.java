@@ -25,23 +25,21 @@ public class Program {
 		GCNumber = Util.countGCNumber(fastqSequencingLines);
 		Util.calculateQuality(fastqQualityLines, fastqQualityMedia);
 		
-		System.out.println("GCNumber " + GCNumber);
-		System.out.println("total bases " + totalBases);
+		System.out.println("GCNumber: " + GCNumber);
+		System.out.println("total bases: " + totalBases);
 		double contentGc = (double) GCNumber/totalBases;
-		System.out.println("GCcontent " + Math.ceil(contentGc*100) + "%");
+		System.out.println("GCcontent: " + Math.ceil(contentGc*100) + "%");
 		
-		System.out.println("Enter a complete path (include the file name) for your result relatory");
+		System.out.println("Enter a complete path (include the file name) for your result relatory:");
 		String pathResult = sc.nextLine();
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("GCNumber " + GCNumber + "\n");
-		sb.append("total bases " + totalBases + "\n");
-		sb.append("GCcontent " + Math.ceil(contentGc*100) + "%" + "\n");
+		sb.append("GCNumber: " + GCNumber + "\n");
+		sb.append("total bases: " + totalBases + "\n");
+		sb.append("GCcontent: " + Math.ceil(contentGc*100) + "%" + "\n");
 		
 		Util.readerRelatory(pathResult, sb.toString(), fastqQualityMedia);
 		
 		sc.close();
-		
-		
 	}
 }
