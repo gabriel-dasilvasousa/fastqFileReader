@@ -1,7 +1,9 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class Util {
 			int totalBases=0;
 			String line = br.readLine();
 			while(line != null) {
-				if(line.startsWith("@ERR") || line.startsWith("+ERR")) {
+				if(line.startsWith("@") || line.startsWith("+")) {
 					line = br.readLine();
 				}
 				
@@ -25,7 +27,9 @@ public class Util {
 					fastqSequencingLines.add(fastqFileLines.get(i));
 					totalBases += fastqFileLines.get(i).length();
 				}
-				fastqQualityLines.add(fastqFileLines.get(i));
+				if(i%2!=0) {
+					fastqQualityLines.add(fastqFileLines.get(i));
+				}
 			}
 			
 			return totalBases;
@@ -50,7 +54,7 @@ public class Util {
 		return GCNumber;
 	}
 	
-	public static void calculateQuality(List<String> fastqQualityLines) {
+	public static void calculateQuality(List<String> fastqQualityLines, List<Double> fastqQualityMedia) {
 		int countLoop=0;
 		for(String lineOfQuality : fastqQualityLines) {
 			char[] qualitysInAsc = lineOfQuality.toCharArray();
@@ -67,7 +71,21 @@ public class Util {
 			
 			double qualityMedia = (double) countQuality/qualitysInDec.length;
 			countLoop++;
-			System.out.println("Quality Media of Sequencing " + countLoop + ": " + String.format("%.2f", qualityMedia));
+			fastqQualityMedia.add(qualityMedia);
+			System.out.println("Quality Media of Sequencing " + countLoop + ": " + qualityMedia);
+		}
+	}
+	
+	public static void readerRelatory(String path, String text, List<Double> fastqQualityMedia) {
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+			bw.write(text);
+			for(int i=0; i<fastqQualityMedia.size();i++) {
+				bw.write("Quality Media of Sequencing " + (int)(i+1) + ": " + fastqQualityMedia.get(i) + "\n");
+			}
+			System.out.println("Successfull, relatory file created");
+		}
+		catch(IOException e) {
+			e.getMessage();
 		}
 	}
 }
